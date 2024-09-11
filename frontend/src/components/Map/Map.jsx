@@ -30,13 +30,17 @@ const initposition = {
 }
 
 
-
 export const MapContainer = (props) => {
-    
-
   const [markers, setMarkers] = useState([]);
   const [poptext, setPoptext] = useState('');
-
+  const [lattitude, SetLattitude]=useState(null);
+  const [longitude, SetLongitude]=useState(null);
+  
+  const handlePosition =(position) => {
+    SetLattitude(position.lat());
+    SetLongitude(position.lng());
+    console.log(lattitude, " ", longitude)
+  }
 
     return (
       <div>
@@ -45,15 +49,12 @@ export const MapContainer = (props) => {
       zoom={14}
       initialCenter={initposition}
       onClick={(mapProps, map, clickEvent) => {
-        const lat = clickEvent.latLng.lat();
-        const lng = clickEvent.latLng.lng();
-        console.log(`Latitude: ${lat}, Longitude: ${lng}`);
-      }
-      }
-        >   
+        handlePosition(clickEvent.latLng)
+      }}>   
+         
         <LevelContext.Provider value= {[poptext, setPoptext]}>
           <MarkerContext.Provider value= {[markers, setMarkers]}>
-          <Test />
+          
           <LevelButtons />
           </MarkerContext.Provider>
           </LevelContext.Provider>
@@ -67,6 +68,13 @@ export const MapContainer = (props) => {
             }}
             />
           ))}
+        <Test lat={lattitude} lng= {longitude}/>
+           <Marker
+            position={{ lat: lattitude, lng: longitude }}
+            icon={{
+              url: markerIcons['High'],
+              scaledSize: new window.google.maps.Size(30, 30)
+            }}/>
         </Map>
         </div>
     );

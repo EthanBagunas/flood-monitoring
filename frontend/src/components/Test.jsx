@@ -10,7 +10,7 @@ import { styled } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
 
 
-const Test = () => {
+const Test = ({lat, lng}) => {
   const theme =useTheme();
   const [anchor, setAnchor] = React.useState(null);
   
@@ -27,6 +27,8 @@ const Test = () => {
         </AddLocationIcon>
         <BasePopup id={id} open={open} anchor={anchor}>
           <PopupBody> 
+            <p>Latitude: {lat}</p>
+            <p>Longitude: {lng}</p>
           </PopupBody>
         </BasePopup>
       </div>
