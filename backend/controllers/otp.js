@@ -35,7 +35,7 @@ const SendOtp = (req, res) => {
   const mobileNumber= req.body.number; 
   const message = `Your One-Time is ${otp}`;
   
-  //SendSemaphore(message, mobileNumber);
+  SendSemaphore(message, mobileNumber);
 
   const sqlInsert = 'INSERT IGNORE INTO otp (username, otp) VALUES (?, ?)';
   db.query(sqlInsert, [username, otp], (err, results) => {

@@ -61,14 +61,14 @@ function App() {
                 <Route path="unauthorized" element={<Unauthorized />} />
 
 
+                
                 <Route element={<PersistLogin />}>
 
                 <Route element={<RequireAuth allowedRoles={[1994, 2001]}/>}>
                 <Route exact path="/Home" element={<Home />} /> 
                 </Route>
-
-                <Route element={<RequireAuth allowedRoles={[1994, 2001]}/>}>
                 <Route exact path ='/map' element ={<MapContainer />}/>
+                <Route element={<RequireAuth allowedRoles={[1994, 2001]}/>}>
                 </Route>
 
                 <Route element={<RequireAuth allowedRoles={[1994]}/>}>
