@@ -4,7 +4,6 @@ import { Grid, Paper } from "@mui/material";
 import Button from '@mui/material/Button';
 import { blue } from "@mui/material/colors";
 import OtpTimer from 'otp-timer';
-import AddLocationIcon from '@mui/icons-material/AddLocation';
 import { Unstable_Popup as BasePopup } from '@mui/base/Unstable_Popup';
 import { styled } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
@@ -14,21 +13,67 @@ const Test = ({lat, lng}) => {
   const theme =useTheme();
   const [anchor, setAnchor] = React.useState(null);
   
-    const handleClick = (event) => {
+    const handleAnchor = (event) => {
       setAnchor(anchor ? null : event.currentTarget);
     };
   
     const open = Boolean(anchor);
     const id = open ? 'simple-popup' : undefined;
+
+    const [formData, setFormData] = useState({
+      deviceName: '',
+      location: '',
+      latitude: lat,
+      longitude: lng,
+    });
+
+    useEffect(() => {
+      setFormData({
+        deviceName: formData.deviceName,
+        location: formData.location,
+        latitude: lat,
+        longitude: lng,
+        });
+    },[lat, lng])
+  
+    const handleInputChange = (event) => {
+      const { name, value } = event.target;
+      setFormData({ ...formData, [name]: value });
+    };
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      axios.post(`http://localhost:7000/setdevices`, formData)
+        .then(response => {
+          console.log(response.data);
+          return { message: 'Successfully added device' };
+        })
+        .catch(error => {
+          console.error(error);
+          res.error('An error occurred. Please try again.');
+        });
+    };
   
     return (
       <div>
-        <AddLocationIcon sx={{color: theme.palette.primary.main}} onClick={handleClick}>
-        </AddLocationIcon>
+        <Button sx={{color: theme.palette.primary.main}} onClick={handleAnchor}>
+          Add Device
+        </Button>
         <BasePopup id={id} open={open} anchor={anchor}>
           <PopupBody> 
-            <p>Latitude: {lat}</p>
-            <p>Longitude: {lng}</p>
+            <div>
+              <input type="text" placeholder="Device Name" name="deviceName" onChange={handleInputChange} />
+              <input type="text" placeholder="Location" name="location" onChange={handleInputChange} />
+              <br />
+              <label>Click on the map to add a device</label>
+              <br />
+
+              <input type="number" placeholder="Lattitude" name="latitude" value={lat}/>
+              <input type="number" placeholder="Longitude" name="longitude" value={lng} />
+              <br />
+
+              <Button onClick={handleSubmit}>Submit</Button>
+            </div>
+            
           </PopupBody>
         </BasePopup>
       </div>
